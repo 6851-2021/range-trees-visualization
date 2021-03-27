@@ -156,20 +156,20 @@ app.layout = html.Div(
                                         min=-np.sqrt(len(data[0]['x'])),
                                         max=np.sqrt(len(data[0]['x'])),
                                         step=1,
-                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))]
-                                        ),
+                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))],
+                                        allowCross=False,),
                         dcc.RangeSlider(id="y",
                                         min=-np.sqrt(len(data[0]['x'])),
                                         max=np.sqrt(len(data[0]['x'])),
                                         step=1,
-                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))]
-                                        ),
+                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))],
+                                        allowCross=False,),
                         dcc.RangeSlider(id="z",
                                         min=-np.sqrt(len(data[0]['x'])),
                                         max=np.sqrt(len(data[0]['x'])),
                                         step=1,
-                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))]
-                                        ),
+                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))],
+                                        allowCross=False,),
                     ],
                     className="pb-20",
                 ),
@@ -189,17 +189,26 @@ app.layout = html.Div(
 
 @app.callback(
     dash.dependencies.Output('points', 'figure'),
+    dash.dependencies.Output('x', 'min'),
+    dash.dependencies.Output('y', 'min'),
+    dash.dependencies.Output('z', 'min'),
+    dash.dependencies.Output('x', 'max'),
+    dash.dependencies.Output('y', 'max'),
+    dash.dependencies.Output('z', 'max'),
+
     [dash.dependencies.Input('generate', 'n_clicks')],
     [dash.dependencies.State('num_elements', 'value')])
 def gen_points(clicks, num_points):
     if (num_points == None): num_points = 10
     xs, ys, zs = generate_random_points(num_points, np.sqrt(num_points))
-    print(clicks, num_points)
     data[0]['x'] = xs
     data[0]['y'] = ys
     data[0]['z'] = zs
 
-    return { "data": data, "layout": plot_layout}
+    minR = -np.floor(np.sqrt(num_points))
+    maxR = np.floor(np.sqrt(num_points))
+
+    return { "data": data, "layout": plot_layout}, minR, minR, minR, maxR, maxR, maxR
 
 @app.callback(
     dash.dependencies.Output('range', 'children'),
