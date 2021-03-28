@@ -42,19 +42,6 @@ plot_layout = {
 }
 
 data=[
-
-    dict(
-        x=[0],
-        y=[0],
-        z=[0],
-        mode='markers',
-        type='scatter3d',
-        text=None,
-        marker=dict(
-            size=12,
-            opacity=0.8
-            )
-        ),
         dict(
             x=[-1, -1, 1, 1, -1, -1, 1, 1],
             y=[-1, 1, 1, -1, -1, 1, 1, -1],
@@ -66,7 +53,20 @@ data=[
             opacity=0.2,
             showscale=True,
         ),
-    ]
+        dict(
+            x=[0],
+            y=[0],
+            z=[0],
+            mode='markers',
+            type='scatter3d',
+            text=None,
+            marker=dict(
+                size=12,
+                opacity=0.8
+                )
+        ),
+
+]
 
 GITHUB_LINK = "https://github.com/6851-2021/range-trees-visualization"
 
@@ -132,12 +132,6 @@ app.layout = html.Div(
         ),
         html.Div(
             [
-                # html.Div(
-                #     [
-                #
-                #     ],
-                #     className="colorscale pb-20",
-                # ),
                 html.Div(
                     [
                         html.P("Select option", className="subheader"),
@@ -171,22 +165,22 @@ app.layout = html.Div(
                         html.Div(id='range'),
                         # configure these to set the correct ranges
                         dcc.RangeSlider(id="x",
-                                        min=-np.sqrt(len(data[0]['x'])),
-                                        max=np.sqrt(len(data[0]['x'])),
+                                        min=-np.sqrt(len(data[1]['x'])),
+                                        max=np.sqrt(len(data[1]['x'])),
                                         step=1,
-                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))],
+                                        value=[-np.sqrt(len(data[1]['x'])), np.sqrt(len(data[1]['x']))],
                                         allowCross=False,),
                         dcc.RangeSlider(id="y",
-                                        min=-np.sqrt(len(data[0]['x'])),
-                                        max=np.sqrt(len(data[0]['x'])),
+                                        min=-np.sqrt(len(data[1]['x'])),
+                                        max=np.sqrt(len(data[1]['x'])),
                                         step=1,
-                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))],
+                                        value=[-np.sqrt(len(data[1]['x'])), np.sqrt(len(data[1]['x']))],
                                         allowCross=False,),
                         dcc.RangeSlider(id="z",
-                                        min=-np.sqrt(len(data[0]['x'])),
-                                        max=np.sqrt(len(data[0]['x'])),
+                                        min=-np.sqrt(len(data[1]['x'])),
+                                        max=np.sqrt(len(data[1]['x'])),
                                         step=1,
-                                        value=[-np.sqrt(len(data[0]['x'])), np.sqrt(len(data[0]['x']))],
+                                        value=[-np.sqrt(len(data[1]['x'])), np.sqrt(len(data[1]['x']))],
                                         allowCross=False,),
                         html.Button("Query", id='query', n_clicks=0),
                         html.Br(),
@@ -264,9 +258,9 @@ def update_points(n, x, y, z, num_points, xmin, ymin, zmin, xmax, ymax, zmax):
         if input_id == 'generate':
             if (num_points == None): num_points = 10
             xs, ys, zs = generate_random_points(num_points, np.sqrt(num_points))
-            data[0]['x'] = xs
-            data[0]['y'] = ys
-            data[0]['z'] = zs
+            data[1]['x'] = xs
+            data[1]['y'] = ys
+            data[1]['z'] = zs
 
             tree = TreeNode.create_from_points(list(zip(xs, ys, zs)))
 
@@ -276,12 +270,12 @@ def update_points(n, x, y, z, num_points, xmin, ymin, zmin, xmax, ymax, zmax):
             return { "data": data, "layout": plot_layout}, minR, minR, minR, maxR, maxR, maxR
         else:
             xs = [x[0] if np.floor(i / 2) % 2 == 0 else x[1] for i in range(8)]
-            ys = [x[0] if np.floor((i - 1) / 2) % 2 == 0 else x[1] for i in range(8)]
+            ys = [y[0] if np.floor((i - 1) / 2) % 2 == 0 else y[1] for i in range(8)]
             zs = [z[0] if np.floor(i / 4) % 2 == 0 else z[1] for i in range(8)]
 
-            data[1]['x'] = xs
-            data[1]['y'] = ys
-            data[1]['z'] = zs
+            data[0]['x'] = xs
+            data[0]['y'] = ys
+            data[0]['z'] = zs
 
             return {"data": data, "layout": plot_layout}, xmin, ymin, zmin, xmax, ymax, zmax
 
