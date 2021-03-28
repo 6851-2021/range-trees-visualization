@@ -65,7 +65,6 @@ data=[
                 opacity=0.8
                 )
         ),
-
 ]
 
 GITHUB_LINK = "https://github.com/6851-2021/range-trees-visualization"
@@ -190,13 +189,6 @@ app.layout = html.Div(
                     ],
                     className="pb-20",
                 ),
-                # html.Div(
-                #     [
-                #         html.Span("Remove point", className="subheader"),
-                #
-                #     ],
-                #     className="pb-20",
-                # ),
             ],
             className="one-third column app__right__section",
         ),
@@ -237,6 +229,7 @@ def update_tree(tree_type):
     dash.dependencies.Output('x', 'max'),
     dash.dependencies.Output('y', 'max'),
     dash.dependencies.Output('z', 'max'),
+    dash.dependencies.Output('range', 'children'),
     [dash.dependencies.Input('generate', 'n_clicks'),
      dash.dependencies.Input('x', 'value'),
      dash.dependencies.Input('y', 'value'),
@@ -251,7 +244,9 @@ def update_tree(tree_type):
 )
 def update_points(n, x, y, z, num_points, xmin, ymin, zmin, xmax, ymax, zmax):
     global tree
+    global data
     ctx = dash.callback_context
+    range_string = 'Range: ' + str(x) + ', ' + str(y) + ', ' + str(z)
 
     if ctx.triggered:
         input_id = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -267,7 +262,7 @@ def update_points(n, x, y, z, num_points, xmin, ymin, zmin, xmax, ymax, zmax):
             minR = -np.floor(np.sqrt(num_points))
             maxR = np.floor(np.sqrt(num_points))
 
-            return { "data": data, "layout": plot_layout}, minR, minR, minR, maxR, maxR, maxR
+            return { "data": data, "layout": plot_layout}, minR, minR, minR, maxR, maxR, maxR, range_string
         else:
             xs = [x[0] if np.floor(i / 2) % 2 == 0 else x[1] for i in range(8)]
             ys = [y[0] if np.floor((i - 1) / 2) % 2 == 0 else y[1] for i in range(8)]
@@ -277,20 +272,11 @@ def update_points(n, x, y, z, num_points, xmin, ymin, zmin, xmax, ymax, zmax):
             data[0]['y'] = ys
             data[0]['z'] = zs
 
-            return {"data": data, "layout": plot_layout}, xmin, ymin, zmin, xmax, ymax, zmax
+            return {"data": data, "layout": plot_layout}, xmin, ymin, zmin, xmax, ymax, zmax, range_string
 
 
 
-    return { "data": data, "layout": plot_layout}, xmin, ymin, zmin, xmax, ymax, zmax
-
-
-@app.callback(
-    dash.dependencies.Output('range', 'children'),
-    [dash.dependencies.Input('x', 'value'),
-     dash.dependencies.Input('y', 'value'),
-     dash.dependencies.Input('z', 'value')],)
-def update_range(x,y,z):
-    return 'Range: ' + str(x) + ', ' + str(y) + ', ' + str(z)
+    return { "data": data, "layout": plot_layout}, xmin, ymin, zmin, xmax, ymax, zmax, range_string
 
 
 
