@@ -206,12 +206,11 @@ app.layout = html.Div(
 def query(n, x,y,z):
     start = PointIndex((x[0], y[0], z[0]))
     end = PointIndex((x[1], y[1], z[1]))
-    total = 0
     start_time = time.time()
-    for elem in tree.range_query(start, end):
-        total += 1
+    top_nodes = list(tree.range_query(start, end))
+    actual_count = sum([st.size for st in top_nodes])
     end_time = time.time()
-    return str(total) +  " elements in range " + \
+    return str(actual_count) +  " elements in range " + \
            str(x) + ', ' + str(y) + ', ' + str(z) + ' in time: ' + str(end_time - start_time)
 
 @app.callback(

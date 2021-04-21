@@ -25,7 +25,7 @@ class TestRangeTree(unittest.TestCase):
                     expected_keys = [key for key in tree_range if start <= key <= end]
                     expected_count = len(expected_keys)
                     top_nodes = list(tree.range_query(start, end))
-                    actual_count = sum((st.size for st in top_nodes), start=0)
+                    actual_count = sum([st.size for st in top_nodes])
                     all_keys = [d.key for st in top_nodes for d in st.traverse_leaves()]
                     self.assertEqual(expected_count, actual_count)
                     self.assertEqual(all_keys, [key for key in tree_range if start <= key <= end])
